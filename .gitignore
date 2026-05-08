@@ -3,3 +3,7 @@ __pycache__/
 tmp_*.py
 .claude/
 .deps/
+dist/
+.venv/
+uv.lock
+.env

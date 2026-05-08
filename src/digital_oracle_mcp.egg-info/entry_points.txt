@@ -1,3 +1,0 @@
-[console_scripts]
-digital-oracle-mcp = mcp_server:main
-digital-oracle-mcp-cloud = mcp_server:main_cloud
