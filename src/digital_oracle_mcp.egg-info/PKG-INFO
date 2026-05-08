@@ -1,11 +1,11 @@
 Metadata-Version: 2.4
 Name: digital-oracle-mcp
-Version: 1.0.1
-Summary: Digital Oracle MCP Server - Answer prediction questions using market trading data
+Version: 1.0.2
+Summary: Digital Oracle MCP Server - 14 financial market data tools via Polymarket, Kalshi, Treasury, CFTC, and more
 Author: komako-workshop
 License: MIT
-Project-URL: Homepage, https://github.com/komako-workshop/digital-oracle
-Project-URL: Repository, https://github.com/komako-workshop/digital-oracle
+Project-URL: Homepage, https://github.com/mzxsuperman/digital-oracle-mcp
+Project-URL: Repository, https://github.com/mzxsuperman/digital-oracle-mcp
 Classifier: Development Status :: 4 - Beta
 Classifier: Intended Audience :: Developers
 Classifier: License :: OSI Approved :: MIT License
@@ -21,14 +21,7 @@ Dynamic: license-file
 
 # Digital Oracle MCP Server
 
-基于 [digital-oracle](https://github.com/komako-workshop/digital-oracle) 项目封装的 MCP Server，将金融市场价格数据封装为 13 个 MCP Tools。
-
-## 功能特性
-
-- **13 个 MCP Tools**：覆盖预测市场、股票、期权、国债、加密货币、机构持仓等数据源
-- **零依赖**：12/14 个 Provider 只需 Python 标准库
-- **并行获取**：支持多数据源并行查询 (`gather`)
-- **stdio + SSE 双模式**：本地使用 stdio，云端部署 SSE
+基于 [digital-oracle](https://github.com/komako-workshop/digital-oracle) 项目封装的 MCP Server，将金融市场价格数据封装为 14 个 MCP Tools。
 
 ## 数据源
 
@@ -69,11 +62,8 @@ Dynamic: license-file
 
 ## 安装
 
-### 本地使用 (stdio 模式)
-
 ```bash
 pip install digital-oracle-mcp
-digital-oracle-mcp
 ```
 
 或使用 uvx：
@@ -82,24 +72,9 @@ digital-oracle-mcp
 uvx digital-oracle-mcp
 ```
 
-### Docker 部署 (SSE 模式)
+## MCP 客户端配置
 
-```bash
-docker build -t digital-oracle-mcp .
-docker run -p 8800:8800 digital-oracle-mcp
-```
-
-## 环境变量
-
-| 变量 | 说明 | 默认值 |
-|------|------|--------|
-| `EDGAR_USER_EMAIL` | SEC EDGAR API User-Agent（内部人交易查询必需） | `1255897343@qq.com` |
-
-## 使用示例
-
-### MCP 客户端配置
-
-#### 通义灵码 / Claude Code / Cursor
+### Claude Code / Cursor
 
 ```json
 {
@@ -108,67 +83,39 @@ docker run -p 8800:8800 digital-oracle-mcp
       "command": "uvx",
       "args": ["digital-oracle-mcp"],
       "env": {
-        "EDGAR_USER_EMAIL": "1255897343@qq.com"
+        "EDGAR_USER_EMAIL": "your_email@example.com"
       }
     }
   }
 }
 ```
 
-#### SSE 模式（魔搭托管）
+### 通用 stdio 配置
 
 ```json
 {
   "mcpServers": {
     "digital-oracle": {
-      "type": "sse",
-      "url": "https://modelscope.cn/api/v1/mcp/servers/{用户名}/digital-oracle/sse",
-      "headers": {
-        "Authorization": "Bearer {MODELSCOPE_API_TOKEN}"
+      "command": "python",
+      "args": ["-m", "mcp_server"],
+      "env": {
+        "EDGAR_USER_EMAIL": "your_email@example.com"
       }
     }
   }
 }
 ```
 
-### Docker + SSE
+## 环境变量
 
-```json
-{
-  "mcp": {
-    "servers": {
-      "digital-oracle": {
-        "url": "http://localhost:8800/sse",
-        "trust": "trusted"
-      }
-    }
-  }
-}
-```
-
-## 云端部署
-
-### 魔搭 MCP 广场（推荐）
-
-1. 发布到 PyPI（包已包含 `[project.scripts]` 入口点）
-2. 访问 https://modelscope.cn/mcp/servers/create?template=customize
-3. 填写信息并选择"可托管部署"
-
-### Smithery.ai
-
-1. 代码推到 GitHub
-2. 访问 https://smithery.ai 用 GitHub 登录
-3. 点击 "Deploy New Server"，选择仓库
+| 变量 | 说明 |
+|------|------|
+| `EDGAR_USER_EMAIL` | SEC EDGAR API User-Agent（查询内部人交易时必需，可使用任意邮箱） |
 
 ## 依赖
 
 - Python >= 3.10
 - fastmcp >= 2.0
-- yfinance（仅期权链和价格历史需要）
-
-```bash
-uv pip install yfinance
-```
 
 ## License
 

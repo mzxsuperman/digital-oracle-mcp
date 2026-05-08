@@ -4,8 +4,8 @@ build-backend = "setuptools.build_meta"
 
 [project]
 name = "digital-oracle-mcp"
-version = "1.0.1"
-description = "Digital Oracle MCP Server - Answer prediction questions using market trading data"
+version = "1.0.2"
+description = "Digital Oracle MCP Server - 14 financial market data tools via Polymarket, Kalshi, Treasury, CFTC, and more"
 readme = "README.md"
 license = {text = "MIT"}
 authors = [{name = "komako-workshop"}]
@@ -25,11 +25,12 @@ classifiers = [
 ]
 
 [project.urls]
-Homepage = "https://github.com/komako-workshop/digital-oracle"
-Repository = "https://github.com/komako-workshop/digital-oracle"
+Homepage = "https://github.com/mzxsuperman/digital-oracle-mcp"
+Repository = "https://github.com/mzxsuperman/digital-oracle-mcp"
 
 [project.scripts]
 digital-oracle-mcp = "mcp_server:main"
+digital-oracle-mcp-cloud = "mcp_server:main_cloud"
 
 [tool.setuptools.packages.find]
 where = ["src"]

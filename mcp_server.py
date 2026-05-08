@@ -35,7 +35,7 @@ from digital_oracle import (
 
 mcp = FastMCP("digital-oracle-mcp")
 
-_EDGAR_EMAIL = os.environ.get("EDGAR_USER_EMAIL", "1255897343@qq.com")
+_EDGAR_EMAIL = os.environ.get("EDGAR_USER_EMAIL", "")
 
 
 def serialize(obj: Any) -> str:
@@ -454,10 +454,32 @@ def multi_signal_query(
 # ============ Main ============
 
 def main():
-    if "--sse" in sys.argv:
-        mcp.run(transport="sse", host="0.0.0.0", port=8800)
-    else:
+    import argparse
+    parser = argparse.ArgumentParser(description="Digital Oracle MCP Server")
+    parser.add_argument("--transport", choices=["stdio", "streamable-http", "sse"],
+                        default="stdio", help="Transport mode")
+    parser.add_argument("--host", default="0.0.0.0", help="Host for HTTP server")
+    parser.add_argument("--port", type=int, default=8000, help="Port for HTTP server")
+    args = parser.parse_args(sys.argv[1:])
+
+    if args.transport == "stdio":
         mcp.run()
+    else:
+        mcp.run(
+            transport=args.transport,
+            host=args.host,
+            port=args.port,
+            stateless_http=True,
+        )
+
+
+def main_cloud():
+    mcp.run(
+        transport="streamable-http",
+        host="0.0.0.0",
+        port=8000,
+        stateless_http=True,
+    )
 
 
 if __name__ == "__main__":

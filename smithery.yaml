@@ -1,0 +1,15 @@
+name: "@mzxsuperman/digital-oracle-mcp"
+version: "1.0.2"
+description: "14 financial market data MCP tools - Polymarket, Kalshi, Treasury, CFTC, CoinGecko, SEC EDGAR, and more"
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: []
+    properties:
+      EDGAR_USER_EMAIL:
+        type: string
+        description: "Email for SEC EDGAR API User-Agent (required for insider trading data)"
+  commandFunction:
+    - "uvx"
+    - "digital-oracle-mcp"
