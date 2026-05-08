@@ -1,0 +1,17 @@
+name: "@komako-workshop/digital-oracle-mcp"
+version: "1.0.0"
+description: "Answer prediction questions using market trading data - Polymarket, Kalshi, Treasury, CFTC, and more"
+startCommand:
+  type: stdio
+  configSchema:
+    type: object
+    required: []
+    properties:
+      EDGAR_USER_EMAIL:
+        type: string
+        description: "Email for SEC EDGAR API User-Agent (required for insider trading data)"
+        default: "1255897343@qq.com"
+  commandFunction:
+    - "uv"
+    - "run"
+    - "digital-oracle-mcp"

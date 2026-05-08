@@ -1,112 +1,154 @@
-[English](README.en.md) | **中文**
+# Digital Oracle MCP Server
 
-# Digital Oracle 📈
+基于 [digital-oracle](https://github.com/komako-workshop/digital-oracle) 项目封装的 MCP Server，将金融市场价格数据封装为 13 个 MCP Tools。
 
-Digital Oracle 是一款让 AI Agent 基于从海量金融数据中，挖掘出宏观事件发展趋势的开源 Skill。
+## 功能特性
 
-适用于 OpenClaw / Claude Code / Cursor / Codex。
-
-我们生活在一个噪音极度泛滥的时代。社交媒体上充斥着情绪化的预测 — 有人说房价要崩了，有人说黄金要上天，有人说明天就打仗。这些观点往往顺应人群情绪，而不是基于客观数据的理性分析。
-
-但交易数据不一样。
-
-价格是绝对理性的 — 当一个人要把自己的钱押在某个结果上时，他会比发一条短视频认真很多。
-
-这就是有效市场理论的核心洞察：**所有公开信息都已经被价格消化了。一切信息都在 K 线里。**
-
-Digital Oracle 把这个洞察变成了一个可执行的工具。它接入了 12 个权威金融数据源 — **从 Polymarket 和 Kalshi 这样的预测市场，到美国国债收益率曲线、CFTC 机构持仓、SEC 内部人交易、各国央行利率、加密衍生品。**
-
-它不看报纸不读新闻，不消费文章、短视频、播客，只通过从金融数据中挖掘出的价值信号，来回答房价涨跌、黄金走势、比特币周期、军事冲突概率这类问题，并给出结构化的概率估计和推理链。
-
-某种意义上，这就是新时代的数字先知。
-
-## 能回答什么问题？
-
-- "WW3 的概率是多少？"
-- "中国房价还会跌多久？"
-- "AI 是不是泡沫？"
-- "现在适合买黄金吗？"
-- "比特币到底了吗？"
-- "NVDA 期权溢价是不是太高了？"
-
-只要有市场在定价这件事，Digital Oracle 就能给出一个基于交易数据的概率估计。
+- **13 个 MCP Tools**：覆盖预测市场、股票、期权、国债、加密货币、机构持仓等数据源
+- **零依赖**：12/14 个 Provider 只需 Python 标准库
+- **并行获取**：支持多数据源并行查询 (`gather`)
+- **stdio + SSE 双模式**：本地使用 stdio，云端部署 SSE
 
 ## 数据源
 
 | Provider | 数据类型 | 用途 |
 |----------|---------|------|
-| Polymarket | 预测市场合约 | 事件概率定价 |
-| Kalshi | SEC 监管二元合约 | 美国政治/经济事件 |
-| Stooq | 股票/ETF/外汇/商品 | 价格历史和趋势 |
-| Deribit | 加密衍生品 | 期货 term structure、期权 IV |
-| US Treasury | 国债收益率 | 利率曲线、通胀预期 |
-| CFTC COT | 期货持仓 | 机构仓位方向（smart money） |
-| CoinGecko | 加密现货 | BTC/ETH 价格、市值 |
-| SEC EDGAR | 内部人交易 | Form 4 买卖信号 |
-| BIS | 央行数据 | 政策利率、信贷/GDP 缺口 |
-| World Bank | 发展指标 | GDP、人口、贸易 |
-| Yahoo Finance | US 期权链 | IV、Greeks、put/call ratio |
-| Web Search | 网页搜索 | VIX、CDS 等补充数据 |
+| PolymarketProvider | 预测市场合约 | 地缘政治、经济事件概率定价 |
+| KalshiProvider | 二元合约 | 美国监管事件市场 |
+| YahooPriceProvider | 价格历史 | 股票/ETF/外汇/商品 |
+| USTreasuryProvider | 国债收益率 | 利率曲线、通胀预期 |
+| CftcCotProvider | 期货持仓 | 机构仓位方向 (smart money) |
+| CoinGeckoProvider | 加密现货 | BTC/ETH 价格、市值 |
+| EdgarProvider | SEC 内部人交易 | Form 4 买卖信号 |
+| BisProvider | 央行数据 | 政策利率、信贷/GDP 缺口 |
+| DeribitProvider | 加密衍生品 | 期货期限结构、期权 IV |
+| FearGreedProvider | 市场情绪 | CNN 恐惧贪婪指数 |
+| CMEFedWatchProvider | 利率概率 | FOMC 会议市场定价 |
+| YFinanceProvider | 期权链 | IV、Greeks、put/call ratio |
+| WebSearchProvider | 网页搜索 | VIX、CDS 等补充数据 |
 
-所有 API 均免费、无需 API Key。
+## MCP Tools
+
+| Tool | 说明 |
+|------|------|
+| `get_polymarket_events` | 查询 Polymarket 预测市场事件 |
+| `get_kalshi_markets` | 查询 Kalshi 监管二元合约 |
+| `get_price_history` | 查询 Yahoo Finance 价格历史 |
+| `get_yield_curve` | 查询美国国债收益率曲线 |
+| `get_cftc_positions` | 查询 CFTC 期货机构持仓 |
+| `get_crypto_prices` | 查询 CoinGecko 加密货币价格 |
+| `get_insider_trades` | 查询 SEC 内部人交易 (Form 4) |
+| `get_policy_rates` | 查询 BIS 央行政策利率 |
+| `get_futures_curve` | 查询 Deribit 加密期货期限结构 |
+| `get_fear_greed_index` | 查询 CNN 恐惧贪婪指数 |
+| `get_fed_rate_probs` | 查询 CME FedWatch 美联储利率概率 |
+| `get_options_chain` | 查询 Yahoo Finance 期权链 |
+| `web_search` | 网页搜索补充数据 |
+| `multi_signal_query` | 并行获取多数据源交叉验证 |
 
 ## 安装
 
-### OpenClaw
+### 本地使用 (stdio 模式)
 
 ```bash
-clawhub install digital-oracle
+pip install digital-oracle-mcp
+digital-oracle-mcp
 ```
 
-### 其他 AI Agent（Claude Code / Cursor / Codex / ...）
+或使用 uvx：
 
-直接告诉你的 Agent：
+```bash
+uvx digital-oracle-mcp
+```
 
-> 安装这个开源项目并读取 SKILL.md 作为你的工作指令：https://github.com/komako-workshop/digital-oracle
+### Docker 部署 (SSE 模式)
 
-Agent 会自行 clone 代码、阅读方法论、调用 provider。
+```bash
+docker build -t digital-oracle-mcp .
+docker run -p 8800:8800 digital-oracle-mcp
+```
 
-### 前置依赖
+## 环境变量
 
-- [uv](https://docs.astral.sh/uv/) — Python 包管理器，skill 运行时用它执行 Python 脚本
-- 12 个数据源中有 11 个零外部依赖（纯 Python 标准库）。期权链分析需要额外安装：
+| 变量 | 说明 | 默认值 |
+|------|------|--------|
+| `EDGAR_USER_EMAIL` | SEC EDGAR API User-Agent（内部人交易查询必需） | `1255897343@qq.com` |
+
+## 使用示例
+
+### MCP 客户端配置
+
+#### 通义灵码 / Claude Code / Cursor
+
+```json
+{
+  "mcpServers": {
+    "digital-oracle": {
+      "command": "uvx",
+      "args": ["digital-oracle-mcp"],
+      "env": {
+        "EDGAR_USER_EMAIL": "1255897343@qq.com"
+      }
+    }
+  }
+}
+```
+
+#### SSE 模式（魔搭托管）
+
+```json
+{
+  "mcpServers": {
+    "digital-oracle": {
+      "type": "sse",
+      "url": "https://modelscope.cn/api/v1/mcp/servers/{用户名}/digital-oracle/sse",
+      "headers": {
+        "Authorization": "Bearer {MODELSCOPE_API_TOKEN}"
+      }
+    }
+  }
+}
+```
+
+### Docker + SSE
+
+```json
+{
+  "mcp": {
+    "servers": {
+      "digital-oracle": {
+        "url": "http://localhost:8800/sse",
+        "trust": "trusted"
+      }
+    }
+  }
+}
+```
+
+## 云端部署
+
+### 魔搭 MCP 广场（推荐）
+
+1. 发布到 PyPI（包已包含 `[project.scripts]` 入口点）
+2. 访问 https://modelscope.cn/mcp/servers/create?template=customize
+3. 填写信息并选择"可托管部署"
+
+### Smithery.ai
+
+1. 代码推到 GitHub
+2. 访问 https://smithery.ai 用 GitHub 登录
+3. 点击 "Deploy New Server"，选择仓库
+
+## 依赖
+
+- Python >= 3.10
+- fastmcp >= 2.0
+- yfinance（仅期权链和价格历史需要）
 
 ```bash
 uv pip install yfinance
 ```
 
-## 工作原理
-
-1. **理解问题** — 拆解核心变量、时间窗口、可定价性
-2. **选择信号** — 根据问题类型选择 3+ 个独立数据源
-3. **并行拉取** — 用 `gather()` 同时调用多个 provider
-4. **矛盾推理** — 找不同市场之间的分歧，解释为什么它们可以同时正确
-5. **输出报告** — 结构化的多层信号表格 + 概率估计 + 场景分析
-
-## 项目结构
-
-```
-digital-oracle/
-├── SKILL.md                # Skill 定义（OpenClaw 读取这个文件）
-├── digital_oracle/         # Python 源码
-│   ├── concurrent.py       # 并行执行工具
-│   ├── http.py             # HTTP 客户端抽象
-│   ├── snapshots.py        # HTTP 响应录制/回放（测试用）
-│   └── providers/          # 12 个数据 provider
-├── references/             # API 速查
-│   ├── providers.md        # Provider API 参考
-│   └── symbols.md          # 交易符号目录
-├── scripts/                # Demo 脚本
-└── tests/                  # 单元测试 + fixtures
-```
-
-## 设计原则
-
-- **零依赖优先** — 11/12 个 provider 只用 Python 标准库，无需 `pip install`
-- **依赖注入** — 所有 provider 接受可选的 `http_client` 参数，方便测试
-- **部分失败容忍** — 一个数据源挂了不影响其他结果
-- **快照测试** — 录制真实 HTTP 响应，CI 里无网络也能跑测试
-
 ## License
 
-MIT © 2026 komako-workshop — see [LICENSE](LICENSE).
+MIT © komako-workshop

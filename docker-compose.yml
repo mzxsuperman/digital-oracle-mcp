@@ -1,0 +1,16 @@
+version: "3.8"
+services:
+  digital-oracle-mcp:
+    build: .
+    container_name: digital-oracle-mcp
+    ports:
+      - "8800:8800"
+    environment:
+      - EDGAR_USER_EMAIL=1255897343@qq.com
+    restart: unless-stopped
+    networks:
+      - mcp-network
+
+networks:
+  mcp-network:
+    external: true
