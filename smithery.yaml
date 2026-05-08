@@ -10,7 +10,6 @@ startCommand:
       EDGAR_USER_EMAIL:
         type: string
         description: "Email for SEC EDGAR API User-Agent (required for insider trading data)"
-        default: "1255897343@qq.com"
   commandFunction:
     - "uv"
     - "run"

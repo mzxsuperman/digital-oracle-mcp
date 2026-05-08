@@ -1,0 +1,2 @@
+[console_scripts]
+digital-oracle-mcp = mcp_server:main

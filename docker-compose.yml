@@ -6,7 +6,7 @@ services:
     ports:
       - "8800:8800"
     environment:
-      - EDGAR_USER_EMAIL=1255897343@qq.com
+      - EDGAR_USER_EMAIL=
     restart: unless-stopped
     networks:
       - mcp-network
